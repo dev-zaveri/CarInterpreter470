@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Interpreter Language</title>
+<style>
+    #container {
+        margin: 20px;
+        text-align: center;
+        background-image: url('my-node-project/background.gif'); /* Adjust the file path for background GIF */
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    #input {
+        width: 100%;
+        height: 200px;
+    }
+    #output {
+        width: 100%;
+        height: 200px;
+        margin-top: 10px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        overflow-y: scroll;
+    }
+    button {
+        margin-top: 10px;
+    }
+    .hidden {
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+<div id="container">
+    <h1>Car Interpreter Language</h1>
+    <h2>Interpret your JavaScript code into our new CIL!</h2>
+    <textarea id="input" placeholder="Enter your JavaScript code here..."></textarea>
+    <button onclick="interpret()">Run JavaScript</button>
+    <pre id="output"></pre>
+</div>
+
+<script>
+    function interpret() {
+        const input = document.getElementById('input').value;
+        
+        // Show loading animation
+        document.getElementById('output').textContent = "Interpreting...";
+        setTimeout(function() {
+            const output = interpretJavaScript(input);
+            
+            // Display output
+            document.getElementById('output').textContent = output;
+        }, 2000); // Simulated delay of 2 seconds
+    }
+
+    // Function to interpret JavaScript code into CarScript
+    function interpretJavaScript(code) {
+        // Translate "Hello, World!" into honking the horn twice
+        code = code.replace(/Hello, World!/g, "honk! honk!");
+
+        // Split the code into lines
+        const lines = code.split('\n');
+        
+        let carScriptCode = "";
+
+        // Iterate over each line
+        for (let line of lines) {
+            // Remove leading and trailing whitespace
+            line = line.trim();
+
+            // Skip empty lines
+            if (line === '') continue;
+
+            // Append the interpreted line to the CarScript code
+            carScriptCode += line + '\n';
+        }
+
+        return carScriptCode;
+    }
+</script>
+
+</body>
+</html>
