@@ -1,0 +1,50 @@
+Dev Zaveri, Tyler McCluskey, Ken Chambers, Navid Hoque
+CMPSC 470 Sections 001, 001, 002, 001 [in order of names]
+Nelson
+29 April 2024
+
+
+Class CarInterpreter
+    Property carScriptCode As String
+
+    Method interpretCarScript(code)
+        lines = Split code into lines
+        For each line in lines
+            Clean line of whitespace
+            If line is "END" Then Exit For
+            tokens = Split line into tokens
+            For each token in tokens
+                Determine action based on token:
+                    "drive();" -> Call CarControls.drive()
+                    "stop();" -> Call CarControls.stop()
+                    "reverse();" -> Call CarControls.reverse()
+                    "horn();" -> Call CarControls.horn()
+                    "read_sensor();" -> Print Sensor.readSensor()
+                    "if" -> Execute block if condition is True
+                    "else" -> Execute block
+                    "while" -> Execute block while condition is True
+                    Handle arithmetic and comparison operations
+
+Class CarControls
+    Method drive()
+        Print "Car is driving forward."
+
+    Method stop()
+        Print "Car has stopped."
+
+    Method reverse()
+        Print "Car is reversing."
+
+    Method horn()
+        Print "Honk! Honk!"
+
+Class Sensor
+    Method readSensor()
+        Return "obstacle"  // Simulated sensor response
+
+// Main Execution Loop
+Create an instance of CarInterpreter
+Prompt user to enter CarScript code
+While user does not type "END"
+    Append input to CarInterpreter.carScriptCode
+Execute CarInterpreter.interpretCarScript()
