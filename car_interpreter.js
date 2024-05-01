@@ -1,4 +1,3 @@
-// Simulated car control functions
 function drive() {
     console.log("Car is driving forward.");
 }
@@ -19,7 +18,7 @@ function read_sensor() {
     return "obstacle"; // Simulating an obstacle detected by sensor
 }
 
-// Function to interpret CarScript code
+// Function to interpret Car Interpreter code
 function interpretCarScript(code) {
     // Split the code into lines
     const lines = code.split('\n');
@@ -43,9 +42,6 @@ function interpretCarScript(code) {
         // Check if it's the end of code input
         if (line === 'END') break;
 
-        // Split the line into tokens
-        const tokens = line.split(/\s+/);
-
         // Interpret tokens
         for (let i = 0; i < tokens.length; i++) {
             const token = tokens[i];
@@ -66,73 +62,31 @@ function interpretCarScript(code) {
                     const obstacle = read_sensor();
                     console.log(`Sensor reads: ${obstacle}`);
                     break;
-                case 'if':
-                    // Handle if statements
-                    const condition = tokens.slice(i + 1).join(' ');
-                    const ifBlockStart = code.indexOf('{', i);
-                    const ifBlockEnd = code.indexOf('}', ifBlockStart);
-                    const ifBlock = code.substring(ifBlockStart + 1, ifBlockEnd);
-                    if (eval(condition)) {
-                        interpretCarScript(ifBlock);
-                    }
-                    i = ifBlockEnd;
-                    break;
-                case 'else':
-                    // Handle else clauses
-                    const elseBlockStart = code.indexOf('{', i);
-                    const elseBlockEnd = code.indexOf('}', elseBlockStart);
-                    const elseBlock = code.substring(elseBlockStart + 1, elseBlockEnd);
-                    interpretCarScript(elseBlock);
-                    i = elseBlockEnd;
-                    break;
-                case 'while':
-                    // Handle while loops
-                    const loopCondition = tokens.slice(i + 1).join(' ');
-                    const whileBlockStart = code.indexOf('{', i);
-                    const whileBlockEnd = code.indexOf('}', whileBlockStart);
-                    const whileBlock = code.substring(whileBlockStart + 1, whileBlockEnd);
-                    let iterations = 0;
-                    while (eval(loopCondition)) {
-                        iterations++;
-                        if (iterations > 1000) {
-                            console.log(`Error: Potential infinite loop detected at line ${lineNumber}`);
-                            break;
-                        }
-                        interpretCarScript(whileBlock);
-                    }
-                    i = whileBlockEnd;
-                    break;
                 default:
                     // Check for arithmetic operations
-                    if (/^\w+\s*=\s*\w+\s*[\+\-\*\/]\s*\w+$/.test(token)) {
+                    if (/^\w+\s*([+\-*\/])\s*\w+$/.test(token)) {
                         // Split the operation into its components
-                        const components = token.split(/\s*[\+\-\*\/]\s*/);
-                        const operator = token.match(/\s*([\+\-\*\/])\s*/)[1];
+                        const components = token.split(/\s*([+\-*\/])\s*/);
+                        const operator = components[1];
 
                         // Perform the arithmetic operation and store the result
                         switch (operator) {
                             case '+':
-                                result = parseFloat(components[1]) + parseFloat(components[2]);
+                                result = parseFloat(components[0]) + parseFloat(components[2]);
                                 break;
                             case '-':
-                                result = parseFloat(components[1]) - parseFloat(components[2]);
+                                result = parseFloat(components[0]) - parseFloat(components[2]);
                                 break;
                             case '*':
-                                result = parseFloat(components[1]) * parseFloat(components[2]);
+                                result = parseFloat(components[0]) * parseFloat(components[2]);
                                 break;
                             case '/':
-                                result = parseFloat(components[1]) / parseFloat(components[2]);
+                                result = parseFloat(components[0]) / parseFloat(components[2]);
                                 break;
                         }
 
-                        // Assign the result to the variable
-                        eval(`${components[0]} = ${result}`);
-                    }
-                    // Check for comparison operations
-                    else if (/^\w+\s*[!=<>]+\s*\w+$/.test(token)) {
-                        // Evaluate the comparison expression
-                        const result = eval(token);
-                        console.log(`Comparison result: ${result}`);
+                        // Output the result
+                        console.log(`Car is accelerating at ${result} mph.`);
                     }
                     // Unknown token
                     else {
@@ -142,24 +96,3 @@ function interpretCarScript(code) {
         }
     }
 }
-
-
-// Get CarScript code from user input
-const readline = require('readline').createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
-console.log("Enter your CarScript code line by line. Type 'END' on a new line when finished.");
-
-let carScriptCode = "";
-
-readline.on('line', (line) => {
-  if (line.trim() === 'END') {
-    // Execute CarScript code
-    interpretCarScript(carScriptCode);
-    readline.close();
-  } else {
-    carScriptCode += line + '\n';
-  }
-});
