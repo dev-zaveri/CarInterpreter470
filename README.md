@@ -1,5 +1,12 @@
 # JavaScript to Car Interpreter Language
 
+## UPDATE
+The only commands that work are 
+- reverse();
+- stop();
+- horn();
+- drive();
+
 ## Overview
 The JavaScript to CarScript Interpreter is a web application that allows users to write JavaScript code and translate it into CarScript, a custom scripting language designed to control a simulated car. The interpreter provides features such as car control functions, conditionals, loops, and visual elements to enhance the user experience.
 
