@@ -41,30 +41,97 @@
 
 <div id="container">
     <h1>Car Interpreter Language</h1>
-    <h2>Interpret your CarScript code here!</h2>
-    <textarea id="input" placeholder="Enter your CarScript code here..."></textarea>
-    <button onclick="interpret()">Run CarScript</button>
+    <h2>Interpret your JavaScript code into our new CIL!</h2>
+    <textarea id="input" placeholder="Enter your JavaScript code here..."></textarea>
+    <button onclick="interpret()">Run JavaScript</button>
     <pre id="output"></pre>
 </div>
 
 <script>
+    // Simulated car control functions
+    function drive() {
+        console.log("Car is driving forward.");
+    }
+
+    function stop() {
+        console.log("Car has stopped.");
+    }
+
+    function reverse() {
+        console.log("Car is reversing.");
+    }
+
+    function horn() {
+        console.log("Honk! Honk!");
+    }
+
+    // Function to interpret JavaScript code into CarScript
+    function interpretJavaScript(code) {
+        // Translate commands into CarScript equivalents
+        code = code.replace(/drive\(\);/g, "Car is driving forward.\n");
+        code = code.replace(/stop\(\);/g, "Car has stopped.\n");
+        code = code.replace(/reverse\(\);/g, "Car is reversing.\n");
+        code = code.replace(/honk\(\);/g, "Honk! Honk!\n");
+
+        // Split the code into lines
+        const lines = code.split('\n');
+        
+        let carScriptCode = "";
+
+        // Iterate over each line
+        for (let line of lines) {
+            // Remove leading and trailing whitespace
+            line = line.trim();
+
+            // Skip empty lines
+            if (line === '') continue;
+
+            // Check if the line is a mathematical operation
+            if (/^\d+\s*[\+\-\*\/]\s*\d+$/.test(line)) {
+                // Split the operation into its components
+                const components = line.split(/\s*([\+\-\*\/])\s*/);
+                const operator = components[1];
+
+                // Perform the arithmetic operation and store the result
+                let result;
+                switch (operator) {
+                    case '+':
+                        result = parseFloat(components[0]) + parseFloat(components[2]);
+                        carScriptCode += `Car is accelerating at ${result}.\n`;
+                        break;
+                    case '-':
+                        result = parseFloat(components[0]) - parseFloat(components[2]);
+                        carScriptCode += `Car is slowing at ${result}.\n`;
+                        break;
+                    case '*':
+                        result = parseFloat(components[0]) * parseFloat(components[2]);
+                        carScriptCode += `Car zoomed with ${result}.\n`;
+                        break;
+                    case '/':
+                        result = parseFloat(components[0]) / parseFloat(components[2]);
+                        carScriptCode += `Car braked with ${result}.\n`;
+                        break;
+                }
+            } else {
+                // Append the interpreted line to the CarScript code
+                carScriptCode += line + '\n';
+            }
+        }
+
+        return carScriptCode;
+    }
+
     function interpret() {
         const input = document.getElementById('input').value;
         
-        // Send the CarScript code to the server for interpretation
-        fetch('/interpret', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ code: input })
-        })
-        .then(response => response.text())
-        .then(output => {
-            // Display the interpreted output
+        // Show loading animation
+        document.getElementById('output').textContent = "Interpreting...";
+        setTimeout(function() {
+            const output = interpretJavaScript(input);
+            
+            // Display output
             document.getElementById('output').textContent = output;
-        })
-        .catch(error => console.error('Error:', error));
+        }, 2000); // Simulated delay of 2 seconds
     }
 </script>
 
